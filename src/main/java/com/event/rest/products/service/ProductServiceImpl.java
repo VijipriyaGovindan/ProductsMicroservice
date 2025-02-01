@@ -3,6 +3,7 @@ package com.event.rest.products.service;
 import com.event.core.ProductCreatedEvent;
 import com.event.rest.products.constants.ProductConstant;
 import com.event.rest.products.model.ProductRequest;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -49,8 +50,13 @@ public class ProductServiceImpl implements ProductService
         String productId = UUID.randomUUID().toString();
         //TODO : Persist product details into db before publishing
         ProductCreatedEvent productCreatedEvent = new ProductCreatedEvent(productId, productRequest.getTitle(), productRequest.getPrice(), productRequest.getQuantity());
-        CompletableFuture<SendResult<String, ProductCreatedEvent>> completableFuture = kafkaTemplate.send(ProductConstant.TOPIC_NAME, productId, productCreatedEvent);
+
+        ProducerRecord<String,ProductCreatedEvent>  producerRecord = new ProducerRecord<>(ProductConstant.TOPIC_NAME,productId,productCreatedEvent);
+        producerRecord.headers().add("message_id",UUID.randomUUID().toString().getBytes());
+
+        CompletableFuture<SendResult<String, ProductCreatedEvent>> completableFuture = kafkaTemplate.send(producerRecord);
         LOGGER.info("Before invoking kafka");
+
         completableFuture.whenComplete((result, exception) ->
         {
             if (exception != null)
