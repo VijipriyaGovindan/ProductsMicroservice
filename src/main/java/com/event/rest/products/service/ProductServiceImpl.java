@@ -51,8 +51,8 @@ public class ProductServiceImpl implements ProductService
         //TODO : Persist product details into db before publishing
         ProductCreatedEvent productCreatedEvent = new ProductCreatedEvent(productId, productRequest.getTitle(), productRequest.getPrice(), productRequest.getQuantity());
 
-        ProducerRecord<String,ProductCreatedEvent>  producerRecord = new ProducerRecord<>(ProductConstant.TOPIC_NAME,productId,productCreatedEvent);
-        producerRecord.headers().add("message_id",UUID.randomUUID().toString().getBytes());
+        ProducerRecord<String, ProductCreatedEvent> producerRecord = new ProducerRecord<>(ProductConstant.TOPIC_NAME, productId, productCreatedEvent);
+        producerRecord.headers().add("message_id", UUID.randomUUID().toString().getBytes());
 
         CompletableFuture<SendResult<String, ProductCreatedEvent>> completableFuture = kafkaTemplate.send(producerRecord);
         LOGGER.info("Before invoking kafka");

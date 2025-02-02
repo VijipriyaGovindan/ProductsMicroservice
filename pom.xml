@@ -64,9 +64,9 @@
 
         <!-- Local modules -->
         <dependency>
-           <groupId>com.event.core</groupId>
-           <artifactId>core</artifactId>
-           <version>0.0.1-SNAPSHOT</version>
+            <groupId>com.event.core</groupId>
+            <artifactId>core</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
